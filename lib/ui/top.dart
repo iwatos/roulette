@@ -40,7 +40,7 @@ class _TopPageState extends State<TopPage> {
 
   void _add() {
     setState(() {
-      _inputList.add(PieData((_inputList.length).toString(), 1));
+      _inputList.add(PieData('${_inputList.length + 1}', 1));
       _itemCount = _inputList.length;
     });
   }
@@ -73,7 +73,7 @@ class _TopPageState extends State<TopPage> {
               physics: NeverScrollableScrollPhysics(),
               itemCount: _itemCount,
               itemBuilder: (BuildContext context, int index) {
-                return _buildInputItem(index);
+                return _buildInputItem(index, _inputList[index]);
               },
             ),
             IconButton(
@@ -88,7 +88,7 @@ class _TopPageState extends State<TopPage> {
     );
   }
 
-  Widget _buildInputItem(int index) {
+  Widget _buildInputItem(int index, PieData pieData) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
       child: Row(
@@ -96,6 +96,7 @@ class _TopPageState extends State<TopPage> {
           Expanded(
             flex: 3,
             child: TextField(
+              controller: TextEditingController(text: pieData.name),
               decoration: const InputDecoration(
                 hintText: '名前',
               ),
@@ -108,6 +109,8 @@ class _TopPageState extends State<TopPage> {
           Expanded(
               flex: 1,
               child: TextField(
+                  controller:
+                      TextEditingController(text: '${pieData.percentage}'),
                   onChanged: (value) {
                     _onChagne(index, percentage: double.parse(value));
                   },
