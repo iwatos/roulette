@@ -6,7 +6,6 @@ import 'package:roulette/ui/circle_graph.dart';
 class TopPage extends StatefulWidget {
   TopPage({Key key, this.title}) : super(key: key);
   final String title;
-  final itemCount = 3;
   @override
   _TopPageState createState() => _TopPageState();
 }
@@ -27,6 +26,7 @@ class _TopPageState extends State<TopPage> {
   }
 
   Widget _buldBody(BuildContext context) {
+    final itemCount = 5;
     final pieDataList = [
       new PieData('Work', 5),
       new PieData('Eat', 10),
@@ -44,7 +44,7 @@ class _TopPageState extends State<TopPage> {
             ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: 10,
+              itemCount: itemCount,
               itemBuilder: (BuildContext context, int index) {
                 return _buildInputItem();
               },

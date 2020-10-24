@@ -9,7 +9,7 @@ class RouletteApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'roulette',
+      title: 'Roulette',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
