@@ -11,18 +11,23 @@ class TopPage extends StatefulWidget {
 }
 
 class _TopPageState extends State<TopPage> {
-  var _inputList = [
-    PieData('1', 33),
-    PieData('2', 33),
-    PieData('3', 33),
-  ];
+  List<PieData> _inputList;
+  int _itemCount;
+  @override
+  initState() {
+    super.initState();
+    _inputList = [
+      PieData('1', 33),
+      PieData('2', 33),
+    ];
+    _itemCount = _inputList.length;
+  }
+
   void functionCalledByAnyone() {
     setState(() {
       _inputList.add(PieData('4', 33));
     });
   }
-
-  var _itemCount = 3;
 
   @override
   Widget build(BuildContext context) {
