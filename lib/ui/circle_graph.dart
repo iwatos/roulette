@@ -10,11 +10,11 @@ class CircleGraph extends StatelessWidget {
     var pieDataChart = List<charts.Series<PieData, String>>()
       ..add(
         charts.Series(
-          domainFn: (PieData data, _) => data.activity,
-          measureFn: (PieData data, _) => data.time,
+          domainFn: (PieData data, _) => data.name,
+          measureFn: (PieData data, _) => data.percentage,
           id: 'roulette',
           data: pieDataList,
-          labelAccessorFn: (PieData row, _) => '${row.activity}',
+          labelAccessorFn: (PieData row, _) => '${row.name}',
         ),
       );
 
@@ -32,7 +32,21 @@ class CircleGraph extends StatelessWidget {
 }
 
 class PieData {
-  String activity;
-  double time;
-  PieData(this.activity, this.time);
+  String _name;
+
+  String get name => _name;
+
+  set name(String name) {
+    _name = name;
+  }
+
+  double _percentage;
+
+  double get percentage => _percentage;
+
+  set percentage(double percentage) {
+    _percentage = percentage;
+  }
+
+  PieData(this._name, this._percentage);
 }

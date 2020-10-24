@@ -11,6 +11,19 @@ class TopPage extends StatefulWidget {
 }
 
 class _TopPageState extends State<TopPage> {
+  var _inputList = [
+    PieData('1', 33),
+    PieData('2', 33),
+    PieData('3', 33),
+  ];
+  void functionCalledByAnyone() {
+    setState(() {
+      _inputList.add(PieData('4', 33));
+    });
+  }
+
+  var _itemCount = 3;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,13 +39,6 @@ class _TopPageState extends State<TopPage> {
   }
 
   Widget _buldBody(BuildContext context) {
-    final itemCount = 5;
-    final pieDataList = [
-      new PieData('Work', 5),
-      new PieData('Eat', 10),
-      new PieData('TV', 35),
-    ];
-
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -40,13 +46,13 @@ class _TopPageState extends State<TopPage> {
           children: [
             SvgPicture.asset('lib/images/arrow_down.svg',
                 width: 50, height: 50),
-            SizedBox(height: 200, child: CircleGraph(pieDataList: pieDataList)),
+            SizedBox(height: 200, child: CircleGraph(pieDataList: _inputList)),
             ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: itemCount,
+              itemCount: _itemCount,
               itemBuilder: (BuildContext context, int index) {
-                return _buildInputItem();
+                return _buildInputItem(index);
               },
             ),
             IconButton(
@@ -59,7 +65,7 @@ class _TopPageState extends State<TopPage> {
     );
   }
 
-  Widget _buildInputItem() {
+  Widget _buildInputItem(int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
       child: Row(
@@ -67,15 +73,18 @@ class _TopPageState extends State<TopPage> {
           Expanded(
             flex: 3,
             child: TextField(
+                controller: new TextEditingController(text: 'aaa'),
                 decoration: const InputDecoration(
-              hintText: '名前',
-            )),
+                  hintText: '名前',
+                )),
           ),
           SizedBox(width: 12),
           Expanded(
               flex: 1,
               child: TextField(
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    functionCalledByAnyone();
+                  },
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
                   ],
