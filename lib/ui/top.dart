@@ -27,6 +27,12 @@ class _TopPageState extends State<TopPage> {
   }
 
   Widget _buldBody(BuildContext context) {
+    final pieDataList = [
+      new PieData('Work', 5),
+      new PieData('Eat', 10),
+      new PieData('TV', 35),
+    ];
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -34,11 +40,11 @@ class _TopPageState extends State<TopPage> {
           children: [
             SvgPicture.asset('lib/images/arrow_down.svg',
                 width: 50, height: 50),
-            SizedBox(height: 200, child: CircleGraph()),
+            SizedBox(height: 200, child: CircleGraph(pieDataList: pieDataList)),
             ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: 2,
+              itemCount: 10,
               itemBuilder: (BuildContext context, int index) {
                 return _buildInputItem();
               },
