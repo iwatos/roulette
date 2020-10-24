@@ -4,10 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:roulette/circle_graph.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(RouletteApp());
 }
 
-class MyApp extends StatelessWidget {
+class RouletteApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -16,29 +16,20 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: TopPage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class TopPage extends StatefulWidget {
+  TopPage({Key key, this.title}) : super(key: key);
   final String title;
-  var itemCount = 3;
-  var piedata = [
-    new PieData('Work', 35.8),
-    new PieData('Eat', 8.3),
-    new PieData('Commute', 10.8),
-    new PieData('TV', 15.6),
-    new PieData('Sleep', 19.2),
-    new PieData('Other', 10.3),
-  ];
-
+  final itemCount = 3;
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _TopPageState createState() => _TopPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _TopPageState extends State<TopPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +68,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 _buildInputItem()
               ],
             ),
-            IconButton(icon: Icon(Icons.add_outlined)),
+            IconButton(
+              icon: Icon(Icons.add_outlined),
+              onPressed: () {},
+            ),
           ],
         ),
       ),
@@ -98,17 +92,20 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           SizedBox(width: 12),
           Expanded(
-            flex: 1,
-            child: TextField(
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                decoration: const InputDecoration(
-                  hintText: '%',
-                )),
-          ),
+              flex: 1,
+              child: TextField(
+                  onChanged: (value) {},
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  decoration: const InputDecoration(
+                    hintText: '%',
+                  ))),
           SizedBox(width: 12),
-          IconButton(icon: Icon(Icons.remove_circle_outline)),
+          IconButton(
+            icon: Icon(Icons.remove_circle_outline),
+            onPressed: () {},
+          ),
         ],
       ),
     );
