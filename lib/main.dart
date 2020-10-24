@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:roulette/circle_graph.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,59 +24,93 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
   final String title;
+  var itemCount = 3;
+  var piedata = [
+    new PieData('Work', 35.8),
+    new PieData('Eat', 8.3),
+    new PieData('Commute', 10.8),
+    new PieData('TV', 15.6),
+    new PieData('Sleep', 19.2),
+    new PieData('Other', 10.3),
+  ];
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
+      appBar: _buildAppBar(),
+      body: _buldBody(context),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: Text(widget.title),
+    );
+  }
+
+  Widget _buldBody(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+          children: [
+            SvgPicture.asset('lib/images/arrow_down.svg',
+                width: 50, height: 50),
+            SizedBox(height: 200, child: CircleGraph()),
+            // ListView.builder(
+            //   shrinkWrap: true,
+            //   physics: NeverScrollableScrollPhysics(),
+            //   itemCount: 2,
+            //   itemBuilder: (BuildContext context, int index) {
+            //     return _buildInputItem();
+            //   },
+            // ),
+            Column(
+              children: [
+                _buildInputItem(),
+                _buildInputItem(),
+                _buildInputItem()
+              ],
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+            IconButton(icon: Icon(Icons.add_outlined)),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Widget _buildInputItem() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 3,
+            child: TextField(
+                decoration: const InputDecoration(
+              hintText: '名前',
+            )),
+          ),
+          SizedBox(width: 12),
+          Expanded(
+            flex: 1,
+            child: TextField(
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                decoration: const InputDecoration(
+                  hintText: '%',
+                )),
+          ),
+          SizedBox(width: 12),
+          IconButton(icon: Icon(Icons.remove_circle_outline)),
+        ],
+      ),
     );
   }
 }
