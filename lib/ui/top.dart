@@ -19,13 +19,29 @@ class _TopPageState extends State<TopPage> {
     _inputList = [
       PieData('1', 33),
       PieData('2', 33),
+      PieData('3', 33),
     ];
     _itemCount = _inputList.length;
   }
 
-  void functionCalledByAnyone() {
+  void _onChagne(int index, {String name, double percentage}) {
     setState(() {
-      _inputList.add(PieData('4', 33));
+      _inputList[index] = PieData(name ?? _inputList[index].name,
+          percentage ?? _inputList[index].percentage);
+    });
+  }
+
+  void _remove(int index) {
+    setState(() {
+      _inputList.removeAt(index);
+      _itemCount = _inputList.length;
+    });
+  }
+
+  void _add() {
+    setState(() {
+      _inputList.add(PieData((_inputList.length).toString(), 1));
+      _itemCount = _inputList.length;
     });
   }
 
@@ -62,7 +78,9 @@ class _TopPageState extends State<TopPage> {
             ),
             IconButton(
               icon: Icon(Icons.add_outlined),
-              onPressed: () {},
+              onPressed: () {
+                _add();
+              },
             ),
           ],
         ),
@@ -78,17 +96,20 @@ class _TopPageState extends State<TopPage> {
           Expanded(
             flex: 3,
             child: TextField(
-                controller: new TextEditingController(text: 'aaa'),
-                decoration: const InputDecoration(
-                  hintText: '名前',
-                )),
+              decoration: const InputDecoration(
+                hintText: '名前',
+              ),
+              onChanged: (value) {
+                _onChagne(index, name: value);
+              },
+            ),
           ),
           SizedBox(width: 12),
           Expanded(
               flex: 1,
               child: TextField(
                   onChanged: (value) {
-                    functionCalledByAnyone();
+                    _onChagne(index, percentage: double.parse(value));
                   },
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
@@ -99,7 +120,9 @@ class _TopPageState extends State<TopPage> {
           SizedBox(width: 12),
           IconButton(
             icon: Icon(Icons.remove_circle_outline),
-            onPressed: () {},
+            onPressed: () {
+              _remove(index);
+            },
           ),
         ],
       ),

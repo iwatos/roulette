@@ -27,6 +27,12 @@ class CircleGraph extends StatelessWidget {
           rightMarginSpec: charts.MarginSpec.fixedPixel(0),
           bottomMarginSpec: charts.MarginSpec.fixedPixel(0),
           leftMarginSpec: charts.MarginSpec.fixedPixel(0)),
+      defaultRenderer: charts.ArcRendererConfig(
+        arcRendererDecorators: [
+          charts.ArcLabelDecorator(
+              labelPosition: charts.ArcLabelPosition.inside)
+        ],
+      ),
     );
   }
 }
