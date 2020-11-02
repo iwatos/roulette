@@ -1,3 +1,4 @@
+import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,9 +18,9 @@ class _TopPageState extends State<TopPage> {
   initState() {
     super.initState();
     _inputList = [
-      PieData('1', 33),
-      PieData('2', 33),
-      PieData('3', 33),
+      PieData(WordPair.random().asPascalCase, 33),
+      PieData(WordPair.random().asPascalCase, 33),
+      PieData(WordPair.random().asPascalCase, 33),
     ];
     _itemCount = _inputList.length;
   }
@@ -40,7 +41,8 @@ class _TopPageState extends State<TopPage> {
 
   void _add() {
     setState(() {
-      _inputList.add(PieData('${_inputList.length + 1}', 1));
+      final nameList = _inputList.map((e) => e.name);
+      _inputList.add(PieData(WordPair.random().asPascalCase, 1));
       _itemCount = _inputList.length;
     });
   }
