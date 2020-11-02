@@ -20,14 +20,14 @@ class CircleGraph extends StatelessWidget {
 
     return charts.PieChart(
       pieDataChart,
-      animate: true,
-      animationDuration: Duration(milliseconds: 500),
+      animate: false,
       layoutConfig: charts.LayoutConfig(
           topMarginSpec: charts.MarginSpec.fixedPixel(0),
           rightMarginSpec: charts.MarginSpec.fixedPixel(0),
           bottomMarginSpec: charts.MarginSpec.fixedPixel(0),
           leftMarginSpec: charts.MarginSpec.fixedPixel(0)),
       defaultRenderer: charts.ArcRendererConfig(
+        strokeWidthPx: 0,
         arcRendererDecorators: [
           charts.ArcLabelDecorator(
               labelPosition: charts.ArcLabelPosition.inside)

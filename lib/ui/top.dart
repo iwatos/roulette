@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +16,7 @@ class TopPage extends StatefulWidget {
 class _TopPageState extends State<TopPage> {
   List<PieData> _inputList;
   int _itemCount;
+  double angle = 1.3 * pi;
   @override
   initState() {
     super.initState();
@@ -69,7 +72,25 @@ class _TopPageState extends State<TopPage> {
           children: [
             SvgPicture.asset('lib/images/arrow_down.svg',
                 width: 50, height: 50),
-            SizedBox(height: 200, child: CircleGraph(pieDataList: _inputList)),
+            TweenAnimationBuilder(
+              curve: Curves.decelerate,
+              duration: const Duration(seconds: 3),
+              tween: Tween<double>(begin: 0, end: angle),
+              builder: (BuildContext context, double size, Widget child) {
+                return Transform.rotate(
+                    angle: size,
+                    child: SizedBox(
+                        height: 200,
+                        child: CircleGraph(pieDataList: _inputList)));
+              },
+            ),
+            RaisedButton(
+                child: const Text('回す！'),
+                onPressed: () {
+                  setState(() {
+                    angle = Random().nextInt(100000) / 10000 * pi;
+                  });
+                }),
             ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
