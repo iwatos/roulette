@@ -22,9 +22,9 @@ class _TopPageState extends State<TopPage> {
   initState() {
     super.initState();
     _inputList = [
-      PieData(WordPair.random().asPascalCase, 33),
-      PieData(WordPair.random().asPascalCase, 33),
-      PieData(WordPair.random().asPascalCase, 33),
+      PieData(WordPair.random().first, 33),
+      PieData(WordPair.random().first, 33),
+      PieData(WordPair.random().first, 33),
     ];
     _itemCount = _inputList.length;
   }
@@ -45,8 +45,7 @@ class _TopPageState extends State<TopPage> {
 
   void _add() {
     setState(() {
-      final nameList = _inputList.map((e) => e.name);
-      _inputList.add(PieData(WordPair.random().asPascalCase, 1));
+      _inputList.add(PieData(WordPair.random().first, 1));
       _itemCount = _inputList.length;
     });
   }
@@ -89,7 +88,7 @@ class _TopPageState extends State<TopPage> {
                       return Transform.rotate(
                           angle: size,
                           child: SizedBox(
-                              height: 200,
+                              height: 150,
                               child: CircleGraph(pieDataList: _inputList)));
                     },
                   )
@@ -103,12 +102,13 @@ class _TopPageState extends State<TopPage> {
                 RaisedButton(
                     child: const Text('GO！'),
                     onPressed: () {
+                      reset();
                       setState(() {
                         animate = true;
                         const min = 30;
                         const max = 50;
                         const digit = 10000;
-                        angle = min +
+                        angle += min +
                             Random().nextInt((max - min) * digit) / digit * pi;
                       });
                     }),
@@ -155,17 +155,16 @@ class _TopPageState extends State<TopPage> {
           Expanded(
               flex: 1,
               child: TextField(
-                  controller:
-                      TextEditingController(text: '${pieData.percentage}'),
-                  onChanged: (value) {
-                    _onChagne(index, percentage: double.parse(value));
-                  },
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
-                  decoration: const InputDecoration(
-                    hintText: '%',
-                  ))),
+                controller:
+                    TextEditingController(text: '${pieData.percentage}'),
+                onChanged: (value) {
+                  _onChagne(index, percentage: double.parse(value));
+                },
+                decoration: const InputDecoration(
+                  hintText: '割合',
+                ),
+                keyboardType: TextInputType.number,
+              )),
           SizedBox(width: 12),
           IconButton(
             icon: Icon(Icons.remove_circle_outline),
