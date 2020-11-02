@@ -16,7 +16,8 @@ class TopPage extends StatefulWidget {
 class _TopPageState extends State<TopPage> {
   List<PieData> _inputList;
   int _itemCount;
-  double angle = 1.3 * pi;
+  double angle = 0;
+  bool animate = false;
   @override
   initState() {
     super.initState();
@@ -64,6 +65,13 @@ class _TopPageState extends State<TopPage> {
     );
   }
 
+  void reset() {
+    setState(() {
+      animate = false;
+      angle = 0;
+    });
+  }
+
   Widget _buldBody(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
@@ -72,25 +80,40 @@ class _TopPageState extends State<TopPage> {
           children: [
             SvgPicture.asset('lib/images/arrow_down.svg',
                 width: 50, height: 50),
-            TweenAnimationBuilder(
-              curve: Curves.decelerate,
-              duration: const Duration(seconds: 3),
-              tween: Tween<double>(begin: 0, end: angle),
-              builder: (BuildContext context, double size, Widget child) {
-                return Transform.rotate(
-                    angle: size,
-                    child: SizedBox(
-                        height: 200,
-                        child: CircleGraph(pieDataList: _inputList)));
-              },
+            animate
+                ? TweenAnimationBuilder(
+                    curve: Curves.decelerate,
+                    duration: Duration(seconds: 3),
+                    tween: Tween<double>(begin: 0, end: angle),
+                    builder: (BuildContext context, double size, Widget child) {
+                      return Transform.rotate(
+                          angle: size,
+                          child: SizedBox(
+                              height: 200,
+                              child: CircleGraph(pieDataList: _inputList)));
+                    },
+                  )
+                : SizedBox(
+                    height: 200, child: CircleGraph(pieDataList: _inputList)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                RaisedButton(
+                    child: const Text('RESET'), onPressed: () => reset()),
+                RaisedButton(
+                    child: const Text('GO！'),
+                    onPressed: () {
+                      setState(() {
+                        animate = true;
+                        const min = 30;
+                        const max = 50;
+                        const digit = 10000;
+                        angle = min +
+                            Random().nextInt((max - min) * digit) / digit * pi;
+                      });
+                    }),
+              ],
             ),
-            RaisedButton(
-                child: const Text('回す！'),
-                onPressed: () {
-                  setState(() {
-                    angle = Random().nextInt(100000) / 10000 * pi;
-                  });
-                }),
             ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
