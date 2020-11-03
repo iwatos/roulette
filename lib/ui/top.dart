@@ -18,13 +18,14 @@ class _TopPageState extends State<TopPage> {
   int _itemCount;
   double angle = 0;
   bool animate = false;
+  static const initValue = 1.0;
   @override
   initState() {
     super.initState();
     _inputList = [
-      PieData(WordPair.random().first, 33),
-      PieData(WordPair.random().first, 33),
-      PieData(WordPair.random().first, 33),
+      PieData(WordPair.random().first, initValue),
+      PieData(WordPair.random().first, initValue),
+      PieData(WordPair.random().first, initValue),
     ];
     _itemCount = _inputList.length;
   }
@@ -45,7 +46,7 @@ class _TopPageState extends State<TopPage> {
 
   void _add() {
     setState(() {
-      _inputList.add(PieData(WordPair.random().first, 1));
+      _inputList.add(PieData(WordPair.random().first, initValue));
       _itemCount = _inputList.length;
     });
   }
@@ -93,7 +94,7 @@ class _TopPageState extends State<TopPage> {
                     },
                   )
                 : SizedBox(
-                    height: 200, child: CircleGraph(pieDataList: _inputList)),
+                    height: 150, child: CircleGraph(pieDataList: _inputList)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -102,25 +103,30 @@ class _TopPageState extends State<TopPage> {
                 RaisedButton(
                     child: const Text('GO！'),
                     onPressed: () {
-                      reset();
                       setState(() {
                         animate = true;
-                        const min = 30;
-                        const max = 50;
-                        const digit = 10000;
-                        angle += min +
-                            Random().nextInt((max - min) * digit) / digit * pi;
+                        const min = 50;
+                        const max = 55;
+                        const digit = 1000;
+                        print('before: $angle');
+                        angle += (min * digit +
+                                Random().nextInt((max - min) * digit)) /
+                            digit;
+                        print('after: $angle');
                       });
                     }),
               ],
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: _itemCount,
-              itemBuilder: (BuildContext context, int index) {
-                return _buildInputItem(index, _inputList[index]);
-              },
+            SingleChildScrollView(
+              child: Container(
+                height: 200,
+                child: ListView.builder(
+                  itemCount: _itemCount,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _buildInputItem(index, _inputList[index]);
+                  },
+                ),
+              ),
             ),
             IconButton(
               icon: Icon(Icons.add_outlined),
@@ -156,9 +162,14 @@ class _TopPageState extends State<TopPage> {
               flex: 1,
               child: TextField(
                 controller:
-                    TextEditingController(text: '${pieData.percentage}'),
+                    TextEditingController(text: initValue.toStringAsFixed(0)),
                 onChanged: (value) {
-                  _onChagne(index, percentage: double.parse(value));
+                  try {
+                    final percentage = double.parse(value);
+                    _onChagne(index, percentage: percentage);
+                  } catch (e) {
+                    print(e);
+                  }
                 },
                 decoration: const InputDecoration(
                   hintText: '割合',
