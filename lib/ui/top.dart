@@ -25,7 +25,6 @@ class _TopPageState extends State<TopPage> {
     _inputList = [
       PieData(WordPair.random().first, initValue),
       PieData(WordPair.random().first, initValue),
-      PieData(WordPair.random().first, initValue),
     ];
     _itemCount = _inputList.length;
   }
@@ -73,74 +72,81 @@ class _TopPageState extends State<TopPage> {
   }
 
   Widget _buldBody(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: SingleChildScrollView(
         child: Column(
           children: [
-            SvgPicture.asset('lib/images/arrow_down.svg',
-                width: 50, height: 50),
-            animate
-                ? TweenAnimationBuilder(
-                    curve: Curves.decelerate,
-                    duration: Duration(seconds: 3),
-                    tween: Tween<double>(begin: 0, end: angle),
-                    builder: (BuildContext context, double size, Widget child) {
-                      return Transform.rotate(
-                          angle: size,
-                          child: SizedBox(
-                              height: 150,
-                              child: CircleGraph(pieDataList: _inputList)));
-                    },
-                  )
-                : SizedBox(
-                    height: 150, child: CircleGraph(pieDataList: _inputList)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                RaisedButton(
-                    child: const Text('RESET'), onPressed: () => reset()),
-                RaisedButton(
-                    child: const Text('GO！'),
-                    onPressed: () {
-                      setState(() {
-                        animate = true;
-                        const min = 50;
-                        const max = 55;
-                        const digit = 1000;
-                        print('before: $angle');
-                        angle += (min * digit +
-                                Random().nextInt((max - min) * digit)) /
-                            digit;
-                        print('after: $angle');
-                      });
-                    }),
-              ],
-            ),
-            SingleChildScrollView(
-              child: Container(
-                height: 200,
-                child: ListView.builder(
-                  itemCount: _itemCount,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _buildInputItem(index, _inputList[index]);
-                  },
-                ),
-              ),
-            ),
+            _buildItems(),
             IconButton(
-              icon: Icon(Icons.add_outlined),
+              icon: Icon(Icons.add_circle_outline),
               onPressed: () {
                 _add();
               },
             ),
+            SvgPicture.asset(
+              'lib/images/arrow_down.svg',
+              height: 50,
+            ),
+            _buildCircleGraph(),
+            _buildButtons(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildInputItem(int index, PieData pieData) {
+  Widget _buildItems() {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: _itemCount,
+      itemBuilder: (BuildContext context, int index) {
+        return _buildInputItem(index);
+      },
+    );
+  }
+
+  Widget _buildCircleGraph() {
+    final height = 200.0;
+    return animate
+        ? TweenAnimationBuilder(
+            curve: Curves.decelerate,
+            duration: Duration(seconds: 3),
+            tween: Tween<double>(begin: 0, end: angle),
+            builder: (BuildContext context, double size, Widget child) {
+              return Transform.rotate(
+                  angle: size,
+                  child: SizedBox(
+                      height: height,
+                      child: CircleGraph(pieDataList: _inputList)));
+            },
+          )
+        : SizedBox(height: height, child: CircleGraph(pieDataList: _inputList));
+  }
+
+  Row _buildButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        RaisedButton(child: const Text('回転リセット'), onPressed: () => reset()),
+        RaisedButton(
+            child: const Text('回す'),
+            onPressed: () {
+              setState(() {
+                animate = true;
+                const min = 50;
+                const max = 55;
+                const digit = 1000;
+                angle += (min * digit + Random().nextInt((max - min) * digit)) /
+                    digit;
+              });
+            }),
+      ],
+    );
+  }
+
+  Widget _buildInputItem(int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
       child: Row(
@@ -148,12 +154,13 @@ class _TopPageState extends State<TopPage> {
           Expanded(
             flex: 3,
             child: TextField(
-              controller: TextEditingController(text: pieData.name),
               decoration: const InputDecoration(
                 hintText: '名前',
               ),
               onChanged: (value) {
-                _onChagne(index, name: value);
+                if (value.isNotEmpty) {
+                  _onChagne(index, name: value);
+                }
               },
             ),
           ),
@@ -161,8 +168,6 @@ class _TopPageState extends State<TopPage> {
           Expanded(
               flex: 1,
               child: TextField(
-                controller:
-                    TextEditingController(text: initValue.toStringAsFixed(0)),
                 onChanged: (value) {
                   try {
                     final percentage = double.parse(value);
